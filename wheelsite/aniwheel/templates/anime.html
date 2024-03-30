@@ -7,10 +7,7 @@
 
 {% block body %}
 <div class="animeCard">
-    <div class="bannerContainer">
-    {% if anime.bannerImage %}
-    <img src="{{ anime.bannerImage }}">
-    {% endif %}
+    <div class="bannerContainer" style="background-image: url({{anime.bannerImage}})">
         <div class="titleContainer">
             {% if anime.title.english %}
             <h1 id="english">{{ anime.title.english }}</h1>
@@ -36,7 +33,6 @@
                 <p class="adult">Adult</p>
                 {% endif %}
                 <p>Source type: {{ anime.source|title }}</p>
-    
             </div>
 
             <div class="horizontal">
