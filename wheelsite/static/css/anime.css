@@ -1,0 +1,24 @@
+.animeCard {
+    margin: 4rem;
+    box-sizing: border-box;
+}
+
+.bannerContainer {
+    position: relative;
+
+    img {
+        max-width: 100%;
+    }
+
+    .titleContainer {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        filter: drop-shadow(5px 5px 5px);
+        font-family: arial;
+
+        h1 {
+            font-size: 5rem;
+        }
+    }
+}

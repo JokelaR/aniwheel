@@ -1,0 +1,55 @@
+{% extends "index.html" %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static "css/anime.css" %}">
+{% endblock css %}
+
+{% block body %}
+<div class="animeCard">
+    <div class="bannerContainer">
+    {% if anime.bannerImage %}
+    <img src="{{ anime.bannerImage }}">
+    {% endif %}
+        <div class="titleContainer">
+            {% if anime.title.english %}
+            <h1>{{ anime.title.english }}</h1>
+            {% endif %}
+            {% if anime.title.romaji %}
+            <h1>{{ anime.title.romaji }}</h1>
+            {% endif %}
+        </div>
+    </div>
+
+    <img src="{{ anime.coverImage.extraLarge }}" style="background: {{ anime.coverImage.color }}">
+    {{ anime.description|striptags|linebreaks }}
+
+    <p>Rating: {{ anime.rating }}</p>
+    <p>Episodes: {{ anime.episodes }}</p>
+    <p>Episode duration: {{ anime.duration }}</p>
+    <p>Format: {{ anime.format }}</p>
+
+    <p>Average score: {{ anime.averageScore }}</p>
+    <p>Mean score: {{ anime.meanScore }}</p>
+
+    <div class="genres">
+        <ul>
+            {% for genre in anime.genres %}
+            <li>{{ genre }}</li>
+            {% endfor %}
+        </ul>
+    <div>
+
+    <div class="tags">
+        <ul>
+            {% for tag in anime.tags %}
+            <li data-tag-general-spoiler="{{tag.isGeneralSpoiler}}" data-tag-media-spoiler="{{tag.isMediaSpoiler}}">{{ tag.name }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <p>Status: {{ anime.status }}</p>
+    <p>Is Adult: {{ anime.isAdult }}</p>
+    <p>Source type: {{ anime.source }}</p>
+</div>
+{% endblock body %}
