@@ -32,10 +32,10 @@
                 <p id="duration" data-duration="{{ anime.duration }}">Episode duration: {{ anime.duration }} minutes</p>
                 <p id="format">Format: {{ anime.format }}</p>
                 <p>Status: {{ anime.status|title }}</p>
-                {% if anime.isAdult == False %}
+                {% if anime.isAdult %}
                 <p class="adult">Adult</p>
                 {% endif %}
-                <p>Source type: {{ anime.source }}</p>
+                <p>Source type: {{ anime.source|title }}</p>
     
             </div>
 
@@ -52,7 +52,7 @@
                     {% endfor %}
                 </ul>
             </div>
-            
+
             <h2>Tags</h2>
             <div id="tags">
                 <ul>
