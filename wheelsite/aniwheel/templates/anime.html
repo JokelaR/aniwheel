@@ -13,43 +13,55 @@
     {% endif %}
         <div class="titleContainer">
             {% if anime.title.english %}
-            <h1>{{ anime.title.english }}</h1>
+            <h1 id="english">{{ anime.title.english }}</h1>
             {% endif %}
             {% if anime.title.romaji %}
-            <h1>{{ anime.title.romaji }}</h1>
+            <h1 id="romaji">{{ anime.title.romaji }}</h1>
             {% endif %}
         </div>
     </div>
+    <main>
+        <img id="coverImage" src="{{ anime.coverImage.extraLarge }}" style="background: {{ anime.coverImage.color }}">
+        <div id="dataContainer">
+            <div id="descriptionContainer">
+                {{ anime.description|striptags|linebreaks }}
+            </div>
 
-    <img src="{{ anime.coverImage.extraLarge }}" style="background: {{ anime.coverImage.color }}">
-    {{ anime.description|striptags|linebreaks }}
+            <div class="horizontal"> 
+                <p id="episodes">Episodes: {{ anime.episodes }}</p>
+                <p id="duration" data-duration="{{ anime.duration }}">Episode duration: {{ anime.duration }} minutes</p>
+                <p id="format">Format: {{ anime.format }}</p>
+                <p>Status: {{ anime.status|title }}</p>
+                {% if anime.isAdult == False %}
+                <p class="adult">Adult</p>
+                {% endif %}
+                <p>Source type: {{ anime.source }}</p>
+    
+            </div>
 
-    <p>Rating: {{ anime.rating }}</p>
-    <p>Episodes: {{ anime.episodes }}</p>
-    <p>Episode duration: {{ anime.duration }}</p>
-    <p>Format: {{ anime.format }}</p>
+            <div class="horizontal">
+                <p id="averageScore" data-average-score="{{ anime.averageScore }}">Average score: {{ anime.averageScore }}</p>
+                <p id="meanScore" data-average-score="{{ anime.meanScore }}">Mean score: {{ anime.meanScore }}</p>
+            </div>
 
-    <p>Average score: {{ anime.averageScore }}</p>
-    <p>Mean score: {{ anime.meanScore }}</p>
-
-    <div class="genres">
-        <ul>
-            {% for genre in anime.genres %}
-            <li>{{ genre }}</li>
-            {% endfor %}
-        </ul>
-    <div>
-
-    <div class="tags">
-        <ul>
-            {% for tag in anime.tags %}
-            <li data-tag-general-spoiler="{{tag.isGeneralSpoiler}}" data-tag-media-spoiler="{{tag.isMediaSpoiler}}">{{ tag.name }}</li>
-            {% endfor %}
-        </ul>
-    </div>
-
-    <p>Status: {{ anime.status }}</p>
-    <p>Is Adult: {{ anime.isAdult }}</p>
-    <p>Source type: {{ anime.source }}</p>
+            <h2>Genres</h2>
+            <div id="genres">
+                <ul>
+                    {% for genre in anime.genres %}
+                    <li class="tag">{{ genre }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            
+            <h2>Tags</h2>
+            <div id="tags">
+                <ul>
+                    {% for tag in anime.tags %}
+                    <li class="tag" data-tag-general-spoiler="{{tag.isGeneralSpoiler}}" data-tag-media-spoiler="{{tag.isMediaSpoiler}}">{{ tag.name }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </main>
 </div>
 {% endblock body %}

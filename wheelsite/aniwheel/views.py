@@ -1,6 +1,7 @@
 import requests
 from .models import Anime, AnilistUser
 from django.shortcuts import render
+from django.core.cache import cache
 
 # Create your views here.
 
@@ -118,52 +119,61 @@ def get_anilist_userdata(username: str):
         return newuser
     
 def get_anilist_anime_details(anilist_id: int):
-    """
-    Get anime data via the AniList GraphQL API
-    """
-    query = """
-    query ($id: Int) {
-        Media(id: $id) {
-            title {
-                english
-                romaji
-                native
-            }
-            format
-            status
-            episodes
-            duration
-            source (version: 3)
-            description
-            genres
-            averageScore
-            meanScore
-            tags {
-                name
-                isGeneralSpoiler
-                isMediaSpoiler
-            }
-            isAdult
-            bannerImage
-            coverImage {
-                extraLarge
-                color
+    media = cache.get(f'anilist_anime_{anilist_id}')
+    if (media is not None): 
+        print(f'Got {anilist_id} from cache')
+    if (media is None):
+        print(f'Getting {anilist_id} from AniList API')
+        """
+        Get anime data via the AniList GraphQL API
+        """
+        query = """
+        query ($id: Int) {
+            Media(id: $id) {
+                title {
+                    english
+                    romaji
+                    native
+                }
+                format
+                status
+                episodes
+                duration
+                source (version: 3)
+                description
+                genres
+                averageScore
+                meanScore
+                tags {
+                    name
+                    isGeneralSpoiler
+                    isMediaSpoiler
+                }
+                isAdult
+                bannerImage
+                coverImage {
+                    extraLarge
+                    color
+                }
             }
         }
-    }
-    """
+        """
 
-    variables = {
-        'id': anilist_id
-    }
+        variables = {
+            'id': anilist_id
+        }
 
-    url = 'https://graphql.anilist.co'
+        url = 'https://graphql.anilist.co'
 
-    response = requests.post(url, json={'query': query, 'variables': variables})
-    data = response.json()
+        response = requests.post(url, json={'query': query, 'variables': variables})
+        data = response.json()
 
-    if 'errors' in data or 'error' in data:
-        print(data)
-        return None
+        if 'errors' in data or 'error' in data:
+            print(f'Anilist API returned an error', data)
+            return None
+        
+        cache.set(f'anilist_anime_{anilist_id}', data['data']['Media'], 3600)
+        media = data['data']['Media']
 
-    return data['data']['Media']
+    print(media['isAdult'])
+    return media
