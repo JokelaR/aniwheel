@@ -24,6 +24,7 @@ class Wheel(models.Model):
 
 
 class Session(models.Model):
+    id = models.AutoField(primary_key=True)
     date = models.DateTimeField(auto_now_add=True)
     shown_anime = models.ManyToManyField(Anime, through="WatchedAnimeStatus")
 

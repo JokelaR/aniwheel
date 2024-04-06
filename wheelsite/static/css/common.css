@@ -3,3 +3,10 @@ body {
     color: white;
     font-family: arial;
 }
+
+a {
+    color: rgb(108, 147, 255);
+}
+a:visited {
+    color: rgb(108, 147, 255);
+}

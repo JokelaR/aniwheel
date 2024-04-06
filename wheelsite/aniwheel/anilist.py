@@ -35,6 +35,9 @@ def get_anilist_anime_by_title(anilist_title: str):
         data = response.json()
 
         if 'error' in data or 'errors' in data:
+            if data['errors']['status'] == 404:
+                print('Anime not found')
+                raise Exception('Anime not found', anilist_title)
             print(data['error'])
             return get_anilist_anime_by_title(anilist_title)
         
