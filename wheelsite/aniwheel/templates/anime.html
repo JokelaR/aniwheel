@@ -1,11 +1,13 @@
 {% extends "index.html" %}
 {% load static %}
+{% load utility_tags %}
 
 {% block css %}
 <link rel="stylesheet" type="text/css" href="{% static "css/anime.css" %}">
 {% endblock css %}
 
 {% block body %}
+{% include 'components/header.html' %}
 <div class="animeCard">
     <div class="bannerContainer" style="background-image: url({{anime.bannerImage}})">
         <div class="titleContainer">
@@ -21,24 +23,50 @@
         <img id="coverImage" src="{{ anime.coverImage.extraLarge }}" style="background: {{ anime.coverImage.color }}">
         <div id="dataContainer">
             <div id="descriptionContainer">
-                {{ anime.description|striptags|linebreaks }}
-            </div>
-
-            <div class="horizontal"> 
-                <p id="episodes">Episodes: {{ anime.episodes }}</p>
-                <p id="duration" data-duration="{{ anime.duration }}">Episode duration: {{ anime.duration }} minutes</p>
-                <p id="format">Format: {{ anime.format }}</p>
-                <p>Status: {{ anime.status|title }}</p>
-                {% if anime.isAdult %}
-                <p class="adult">Adult</p>
-                {% endif %}
-                <p>Source type: {{ anime.source|title }}</p>
+                {{ anime.description|unescape|striptags|linebreaks }}
             </div>
 
             <div class="horizontal">
-                <p id="averageScore" data-average-score="{{ anime.averageScore }}">Average score: {{ anime.averageScore }}</p>
-                <p id="meanScore" data-average-score="{{ anime.meanScore }}">Mean score: {{ anime.meanScore }}</p>
+                <a href="https://anilist.co/anime/{{ anime.id }}" class="anilist-link" target="_blank">
+                    <img id="anilistLogo" src="{% static "img/anilist.svg" %}" alt="AniList">
+                </a>
+                <div class="vertical">
+                    <div class="horizontal">
+                        <p id="episodes">Episodes: {{ anime.episodes }}</p>
+                        <p id="duration" data-duration="{{ anime.duration }}">Episode duration: {{ anime.duration }} minutes</p>
+                        <p id="format">Format: {{ anime.format }}</p>
+                        <p>Status: {{ anime.status|title }}</p>
+                        {% if anime.isAdult %}
+                        <p class="adult">Adult</p>
+                        {% endif %}
+                        <p>Source type: {{ anime.source|title }}</p>
+                    </div>
+                    <div class="horizontal">
+                        <p id="averageScore" data-average-score="{{ anime.averageScore }}">Average score: {{ anime.averageScore }}</p>
+                        <p id="meanScore" data-average-score="{{ anime.meanScore }}">Mean score: {{ anime.meanScore }}</p>
+                    </div>
+                </div>
+                <div class="buttonPair">
+                    <form action="{% url 'get_more_anime' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="remaining_list" value="{{ remaining_list }}">
+                        <button type="submit">Get another anime</button>
+                    </form>
+                    {% if perms.aniwheel.add_seenanime or True %}
+                    <form action="{% url 'add_anime_to_seen' %}" method="POST" id="add_seen">
+                        {% csrf_token %}
+                        <input type="hidden" name="anilist_id" value="{{ anime.id }}">
+                        <button type="submit">Mark as seen</button>
+                    </form>
+                    <form action="{% url 'add_anime_to_seen' %}" method="POST" id="dont_show">
+                        {% csrf_token %}
+                        <input type="hidden" name="anilist_id" value="{{ anime.id }}">
+                        <button type="submit">Don't show again</button>
+                    </form>
+                    {% endif %}
+                </div>
             </div>
+
 
             <h2>Genres</h2>
             <div id="genres">
@@ -60,4 +88,25 @@
         </div>
     </main>
 </div>
+{% if user.is_authenticated %}
+<script>
+    const form = document.getElementById("add_seen");
+    const form2 = document.getElementById("dont_show");
+    const form.addEventListener("submit", setSeen);
+    const form2.addEventListener("submit", setSeen);
+
+    function setSeen(event) {
+        event.preventDefault();
+        fetch("{% url 'add_anime_to_seen' %}", {
+            method: "POST",
+            body: new FormData(form)
+        }).then(response => {
+            if (response.ok) {
+                window.location.reload()
+            }
+        });
+
+    }
+</script>
+{% endif %}
 {% endblock body %}

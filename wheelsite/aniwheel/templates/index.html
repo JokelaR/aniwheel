@@ -1,4 +1,5 @@
 {% load static %}
+{% load socialaccount %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,11 +9,63 @@
     <link rel="stylesheet" href="{% static "css/reset.css" %}">
     <link rel="stylesheet" href="{% static "css/common.css" %}">
     {% block css %}
+    <style>
+    main {
+        margin: auto;
+        max-width: 700px;
+        margin-top: 10vh;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    h1 {
+        text-align: center;
+        font-size: 2rem;
+    }
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    </style>
     {% endblock css %}
 </head>
 <body>
     {% block body %}
-    <p>Django is workin~</p>
+    <main>
+        <h1>AniWheel</h1>
+
+        <form action="{% url 'get_random_anime' %}" method="POST">
+            {% csrf_token %}
+            <label for="anilist_username">AniList Username</label>
+            <input type="text" name="anilist_username" placeholder="Username">
+
+            <fieldset>
+                <legend>Media Formats</legend>
+                <input type="checkbox" name="format" value="TV" id="TV" checked>
+                <label for="TV">TV</label>
+                <input type="checkbox" name="format" value="TV_SHORT" id="TV_SHORT" checked>
+                <label for="TV_SHORT">TV Short</label>
+                <input type="checkbox" name="format" value="MOVIE" id="MOVIE">
+                <label for="MOVIE">Movie</label>
+                <input type="checkbox" name="format" value="SPECIAL" id="SPECIAL">
+                <label for="SPECIAL">Special</label>
+                <input type="checkbox" name="format" value="OVA" id="OVA" checked>
+                <label for="OVA">OVA</label>
+                <input type="checkbox" name="format" value="ONA" id="ONA" checked>
+                <label for="ONA">ONA</label>
+                <input type="checkbox" name="format" value="MUSIC" id="MUSIC">
+                <label for="MUSIC">Music</label>
+            </fieldset>
+
+            <button type="submit">Get Planning</button>
+        </form>
+        {% if not user.is_authenticated %}
+        <a href="{% provider_login_url 'discord' %}">Discord Log-in</a>
+        {% else %}
+            <p>{{user.username|escape}} (<a href="{% url 'account_logout' %}">Log Out</a>)</p>
+        {% endif %}
+    </main>
     {% endblock body %}
 </body>
 </html>

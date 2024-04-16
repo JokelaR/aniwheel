@@ -4,6 +4,13 @@ body {
     font-family: arial;
 }
 
+header {
+    font-size: 2rem;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+}
+
 a {
     color: rgb(108, 147, 255);
 }

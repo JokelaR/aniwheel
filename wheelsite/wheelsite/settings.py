@@ -162,3 +162,19 @@ CACHES = {
         "LOCATION": "anilist_cache_table",
     }
 }
+
+ACCOUNT_EMAIL_REQUIRED = False
+ACCOUNT_EMAIL_VERIFICATION = "none"
+ACCOUNT_AUTHENTICATION_METHOD = "username"
+
+LOGIN_URL = '/accounts/discord/login'
+LOGIN_REDIRECT_URL = "/"
+
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+CSRF_TRUSTED_ORIGINS = [ 
+    
+]
+ALLOWED_HOSTS = [
+    
+]

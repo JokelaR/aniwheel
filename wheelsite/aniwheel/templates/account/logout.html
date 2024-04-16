@@ -1,0 +1,17 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block title %}Janart Login{% endblock title %}
+
+{% block page-style %}<link rel="stylesheet" href="{% static 'index.css' %}">{% endblock page-style %}
+
+{% block body %}
+<main style="">
+    <h1>Logout</h1>
+    <p>You are about to sign out.</p>
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit">Continue</button>
+    </form>
+  </main>
+{% endblock body %}
