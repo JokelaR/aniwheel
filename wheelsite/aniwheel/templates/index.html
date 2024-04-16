@@ -38,7 +38,7 @@
         <form action="{% url 'get_random_anime' %}" method="POST">
             {% csrf_token %}
             <label for="anilist_username">AniList Username</label>
-            <input type="text" name="anilist_username" placeholder="Username">
+            <input type="text" name="anilist_username" placeholder="Anilist Username" autocomplete="off">
 
             <fieldset>
                 <legend>Media Formats</legend>

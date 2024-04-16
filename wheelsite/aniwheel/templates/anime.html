@@ -52,7 +52,7 @@
                         <input type="hidden" name="remaining_list" value="{{ remaining_list }}">
                         <button type="submit">Get another anime</button>
                     </form>
-                    {% if perms.aniwheel.add_seenanime or True %}
+                    {% if perms.aniwheel.add_seenanime %}
                     <form action="{% url 'add_anime_to_seen' %}" method="POST" id="add_seen">
                         {% csrf_token %}
                         <input type="hidden" name="anilist_id" value="{{ anime.id }}">
