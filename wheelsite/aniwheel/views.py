@@ -25,8 +25,8 @@ def anime_page(request, anilist_id, **kwargs):
         return JsonResponse({'status': 'failed', 'message': 'Error getting anilist anime'})
     return render(request, 'anime.html', {'anime': anime, 'remaining_list': list})
 
-def get_random_anime(request, **kwargs):
-    username = request.POST.get('anilist_username')
+def get_random_anime(request):
+    username = request.POST.get('search_user')
     filters = request.POST.getlist('format')
     if not username or not filters:
         raise Http404("Can't find anything with no username or no filters")

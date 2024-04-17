@@ -27,6 +27,21 @@
         flex-direction: column;
         gap: 1rem;
     }
+    fieldset {
+        padding: 1rem 0rem;
+        margin-top: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+
+        input {
+            transform: scale(1.5);
+        }
+        label {
+            margin-right: auto;
+            margin-left: 0.4rem;
+        }
+    }
     </style>
     {% endblock css %}
 </head>
@@ -37,8 +52,8 @@
 
         <form action="{% url 'get_random_anime' %}" method="POST">
             {% csrf_token %}
-            <label for="anilist_username">AniList Username</label>
-            <input type="text" name="anilist_username" placeholder="Anilist Username" autocomplete="off">
+            <label for="search_user">AniList Username</label>
+            <input type="text" name="search_user" placeholder="Anilist user's name">
 
             <fieldset>
                 <legend>Media Formats</legend>
