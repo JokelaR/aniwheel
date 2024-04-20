@@ -1,7 +1,6 @@
-from time import sleep
 import requests
 from django.core.cache import cache
-    
+
 def get_anilist_anime_details(anilist_id: int):
     media = cache.get(f'anilist_anime_{anilist_id}')
     if (media is not None): 
@@ -62,13 +61,26 @@ def get_anilist_anime_details(anilist_id: int):
 
     return media
 
-def get_user_anime_list(username: str):
+
+def get_user_anime_list(username: str, status: str = 'PLANNING'):
     """
     Get user anime list via the AniList GraphQL API
+
+    Args:
+        username (str): The username of the user whose anime list is to be retrieved.
+        status (str, optional): The status of the anime entries to be retrieved. Defaults to PLANNING. 
+        
+        (PLANNING, CURRENT, COMPLETED, DROPPED, PAUSED, REPEATING)
+
+    Returns:
+        list: A list of anime entries from the user's anime list.
+        None: Returns None if there is an error retrieving the anime list.
+        str: Returns '404' if the user is not found.
     """
+
     query = """
-    query ($username: String) {
-        MediaListCollection(userName: $username, type: ANIME, status: PLANNING) {
+    query ($username: String, $status: MediaListStatus) {
+        MediaListCollection(userName: $username, type: ANIME, status: $status) {
             lists {
                 entries {
                     media {
@@ -86,7 +98,7 @@ def get_user_anime_list(username: str):
     }
     """
 
-    variables = { 'username': username }
+    variables = { 'username': username, 'status': status }
 
     url = 'https://graphql.anilist.co'
 

@@ -28,22 +28,29 @@ def anime_page(request, anilist_id, **kwargs):
 def get_random_anime(request):
     username = request.POST.get('search_user')
     filters = request.POST.getlist('format')
+    status = request.POST.get('list')
+    ignore_seen = request.POST.get('ignore_seen')
+    if not ignore_seen:
+        watchedList = [x.id for x in SeenAnime.objects.all()]
+    else:
+        watchedList = []
+
     if not username or not filters:
         raise Http404("Can't find anything with no username or no filters")
     
-    list = cache.get(f'anilist_list_{username}')
+    list = cache.get(f'anilist_list_{username}_{status}')
     if not list:
-        list = get_user_anime_list(username)
+        list = get_user_anime_list(username, status)
         if list == '404':
             raise Http404('User not found')
-        cache.set(f'anilist_list_{username}', list, 600)
+        cache.set(f'anilist_list_{username}_{status}', list, 600)
     if list:
         anime_picked = False
-        list = [x['media']['id'] for x in list if x['media']['format'] in filters]
+        list = [x['media']['id'] for x in list if x['media']['format'] in filters and x['media']['id'] not in watchedList]
         while not anime_picked and list:
             random.shuffle(list)
             chosen = list.pop()
-            if not SeenAnime.objects.filter(id=chosen):
+            if chosen not in watchedList:
                 anime_picked = True
         if not list:
             return JsonResponse({'status': 'failed', 'message': 'No anime to show'})
