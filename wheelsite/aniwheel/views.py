@@ -47,13 +47,11 @@ def get_random_anime(request):
     if list:
         anime_picked = False
         list = [x['media']['id'] for x in list if x['media']['format'] in filters and x['media']['id'] not in watchedList]
-        while not anime_picked and list:
-            random.shuffle(list)
-            chosen = list.pop()
-            if chosen not in watchedList:
-                anime_picked = True
         if not list:
             return JsonResponse({'status': 'failed', 'message': 'No anime to show'})
+        random.shuffle(list)
+        chosen = list.pop()
+
         return anime_page(request, chosen, remaining_list=list)
     
     else:

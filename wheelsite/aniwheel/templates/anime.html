@@ -47,7 +47,7 @@
                     </div>
                 </div>
                 <div class="buttonPair">
-                    <form action="{% url 'get_more_anime' %}" method="POST">
+                    <form action="{% url 'get_more_anime' %}" method="POST" id="get_more">
                         {% csrf_token %}
                         <input type="hidden" name="remaining_list" value="{{ remaining_list }}">
                         <button type="submit">Get another anime</button>
@@ -92,20 +92,20 @@
 <script>
     const form = document.getElementById("add_seen");
     const form2 = document.getElementById("dont_show");
-    const form.addEventListener("submit", setSeen);
-    const form2.addEventListener("submit", setSeen);
+    const moreAnimeForm = document.getElementById("get_more");
+    form.addEventListener("submit", setSeen);
+    form2.addEventListener("submit", setSeen);
 
     function setSeen(event) {
         event.preventDefault();
         fetch("{% url 'add_anime_to_seen' %}", {
             method: "POST",
             body: new FormData(form)
-        }).then(response => {
+        }).then((response) => {
             if (response.ok) {
-                window.location.reload()
+                get_more.submit()
             }
         });
-
     }
 </script>
 {% endif %}
